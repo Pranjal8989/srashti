@@ -1,6 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:srashti/component/api.dart';
 import 'package:srashti/widgets/coustom_scaffold.dart';
+import 'package:http/http.dart' as http;
+import 'package:srashti/widgets/customsnackbar.dart';
 
 class Signuppage extends StatefulWidget
 {
@@ -12,10 +18,43 @@ class _SignuppageState extends State<Signuppage> {
   final signupkey = GlobalKey<FormState>();
 
   var remember = true;
-  void signin() {
-    if (signupkey.currentState!.validate()) {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+
+
+  Future<void> signin()async {
+try{
+  if (signupkey.currentState!.validate()) {
+
+    final url = Uri.parse('${Apiurl}signup');
+    var res = await http.post(url, body: {
+      "name": nameController.text,
+      "email": emailController.text,
+      "pass": passController.text
+    });
+    // print(res);
+    // return;
+
+    var response = jsonDecode(res.body);
+    if(response['status'] == '200'){
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('data processing')));
+          .showSnackBar(SnackBar(content: Text('Data Added Successfully')));
+      nameController.text ="";
+      passController.text ="";
+      emailController.text ="";
+  // CustomSnackbar.snackbar('Success', 'Details added Successfully');
+    }else{
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('error')));
+      // CustomSnackbar.snackbar('Error', 'Some Error occur');
+    }
+  }
+}
+    catch(e){
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+      // CustomSnackbar.snackbar('Error', e.toString());
     }
   }
 
@@ -83,8 +122,9 @@ class _SignuppageState extends State<Signuppage> {
                             height: 30,
                           ),
                           TextFormField(
+                            controller: nameController,
                             validator: _validateName,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            // autovalidateMode: AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(
                                 label: Text('Enter Name '),
                                 hintText: 'Enter Name',
@@ -110,7 +150,8 @@ class _SignuppageState extends State<Signuppage> {
                           TextFormField(
                             keyboardType: TextInputType.emailAddress,
                             validator: _validateEmail,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            controller: emailController,
+                            // autovalidateMode: AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(
                                 label: Text('Enter Email '),
                                 hintText: 'Enter Email',
@@ -136,7 +177,9 @@ class _SignuppageState extends State<Signuppage> {
                           TextFormField(
                             keyboardType: TextInputType.number,
                             obscureText: true,
+                            controller: passController,
                             validator: _validatePass,
+                            // autovalidateMode: AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(
                                 label: Text('Enter Password '),
                                 hintText: 'Enter Password',

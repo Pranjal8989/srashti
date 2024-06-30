@@ -1,7 +1,12 @@
 // import 'dart:js_interop';
+import 'dart:convert';
+
 import 'package:icons_plus/icons_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:srashti/component/api.dart';
+import 'package:srashti/views/signuppage.dart';
 import 'package:srashti/widgets/coustom_scaffold.dart';
+import 'package:http/http.dart' as http;
 
 class Signinpage extends StatefulWidget {
   @override
@@ -12,10 +17,34 @@ class _SigninpageState extends State<Signinpage> {
   final signinkey = GlobalKey<FormState>();
 
   var remember = true;
-  void signin() {
-    if (signinkey.currentState!.validate()) {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+
+  Future<void> signin() async {
+    try {
+      if (signinkey.currentState!.validate()) {
+        final url = Uri.parse('${Apiurl}sigin');
+        var res = await http.post(url, body: {
+          'email': emailController.text,
+          'pass': passController.text,
+        });
+        var response = jsonDecode(res.body);
+        if (response['status'] == '200') {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Signuppage(),
+              ));
+          emailController.text = "";
+          passController.text = "";
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('something went wrong')));
+        }
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('data processing')));
+          .showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 
@@ -29,13 +58,13 @@ class _SigninpageState extends State<Signinpage> {
     }
     return null;
   }
+
   String? _validatePass(value) {
     if (value!.isEmpty) {
       return 'please enter a password';
     }
     return null;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +109,9 @@ class _SigninpageState extends State<Signinpage> {
                           TextFormField(
                             keyboardType: TextInputType.emailAddress,
                             validator: _validateEmail,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            controller: emailController,
+                            // autovalidateMode:
+                            //     AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(
                                 label: Text('Enter Email '),
                                 hintText: 'Enter Email',
@@ -107,6 +138,7 @@ class _SigninpageState extends State<Signinpage> {
                             keyboardType: TextInputType.number,
                             obscureText: true,
                             validator: _validatePass,
+                            controller: passController,
                             decoration: InputDecoration(
                                 label: Text('Enter Password '),
                                 hintText: 'Enter Password',
@@ -179,7 +211,9 @@ class _SigninpageState extends State<Signinpage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
                           Row(
                             children: [
                               Expanded(
@@ -189,7 +223,8 @@ class _SigninpageState extends State<Signinpage> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Text(
                                   'Sign Up With',
                                   style: TextStyle(
@@ -207,14 +242,24 @@ class _SigninpageState extends State<Signinpage> {
                               ),
                             ],
                           ),
-SizedBox(height: 15,),
+                          SizedBox(
+                            height: 15,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                          Icon(Bootstrap.facebook, size: 50,color: Colors.blue,),
-                          Icon(Bootstrap.google, size: 50 ,color: Colors.red,),
-                          Icon(Bootstrap.github, size: 50),
-                          Icon(Bootstrap.apple, size: 50),
+                              Icon(
+                                Bootstrap.facebook,
+                                size: 50,
+                                color: Colors.blue,
+                              ),
+                              Icon(
+                                Bootstrap.google,
+                                size: 50,
+                                color: Colors.red,
+                              ),
+                              Icon(Bootstrap.github, size: 50),
+                              Icon(Bootstrap.apple, size: 50),
                             ],
                           )
                         ],
@@ -224,7 +269,6 @@ SizedBox(height: 15,),
                 ),
               ),
             ),
-
           ],
         ));
   }
