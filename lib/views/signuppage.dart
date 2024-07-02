@@ -38,23 +38,19 @@ try{
 
     var response = jsonDecode(res.body);
     if(response['status'] == '200'){
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Data Added Successfully')));
       nameController.text ="";
       passController.text ="";
       emailController.text ="";
-  // CustomSnackbar.snackbar('Success', 'Details added Successfully');
+      CustomSnackbar.snackbar('Success', 'Details added Successfully',Icons.check_circle);
     }else{
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('error')));
-      // CustomSnackbar.snackbar('Error', 'Some Error occur');
+      // ScaffoldMessenger.of(context)
+      //     .showSnackBar(SnackBar(content: Text('error')));
+      CustomSnackbar.snackbar('Error', 'Something went wrong',Icons.error);
     }
   }
 }
     catch(e){
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
-      // CustomSnackbar.snackbar('Error', e.toString());
+      CustomSnackbar.snackbar('Error', e.toString(),Icons.error);
     }
   }
 

@@ -4,9 +4,12 @@ import 'dart:convert';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:srashti/component/api.dart';
+import 'package:srashti/views/dashboard/dashboardpage.dart';
 import 'package:srashti/views/signuppage.dart';
 import 'package:srashti/widgets/coustom_scaffold.dart';
 import 'package:http/http.dart' as http;
+
+import '../widgets/customsnackbar.dart';
 
 class Signinpage extends StatefulWidget {
   @override
@@ -33,18 +36,17 @@ class _SigninpageState extends State<Signinpage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Signuppage(),
+                builder: (context) => Dashboardpage(),
               ));
           emailController.text = "";
           passController.text = "";
+          // CustomSnackbar.snackbar('Success', 'Details added Successfully',Icons.check_circle);
         } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('something went wrong')));
+          CustomSnackbar.snackbar('Error', 'Something went wrong',Icons.error);
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+          CustomSnackbar.snackbar('Error', e.toString(),Icons.error);
     }
   }
 
