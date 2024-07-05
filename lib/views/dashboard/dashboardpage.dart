@@ -12,13 +12,6 @@ class Dashboardpage extends StatefulWidget {
 class _DashboardpageState extends State<Dashboardpage> {
   final mycontroller = Get.put(Mycontroller());
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      mycontroller.showBottomSheet();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,16 +39,21 @@ class _DashboardpageState extends State<Dashboardpage> {
       body: Stack(
         children: [
           Container(
+            width: double.infinity,
+            height: double.infinity,
             color: Colors.blue,
           ),
-          Container(
-            margin: EdgeInsets.only(top: 60, left: 100),
-            // color: Colors.red,
-            child: Text(
-              'welcome ! ',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 32,
+          Card(
+            elevation: 5,
+            child: Container(
+              margin: EdgeInsets.only(top: 60, left: 100,bottom: 100),
+              // color: Colors.red,
+              child: Text(
+                'welcome ! ',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32,
+                ),
               ),
             ),
           ),
