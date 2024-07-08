@@ -5,9 +5,9 @@ class CustomBottomsheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.3,
-      minChildSize: 0.3,
-      maxChildSize: 0.8,
+      initialChildSize: 0.5,
+      minChildSize: 0.5,
+      maxChildSize: 0.7,
       builder: (context, scrollController) {
         return SingleChildScrollView(
           controller: scrollController,
@@ -41,20 +41,22 @@ class CustomBottomsheet extends StatelessWidget {
                       )),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  // padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.only(top: 50,left: 15,right: 15,bottom: 10),
                   child: Card(
                     elevation: 10,
                     child: TableCalendar(
                       headerStyle: HeaderStyle(
                           formatButtonVisible: false, titleCentered: true),
-                      rowHeight: 80,
+                      rowHeight: 50,
                       firstDay: DateTime.utc(2010, 10, 16),
                       lastDay: DateTime.utc(2060, 3, 14),
                       focusedDay: DateTime.now(),
+
                     ),
                   ),
                 ),
-                // SizedBox(height: 300), if we donot use any contain in warper
+                SizedBox(height: 50), //if we donot use any contain in warper
               ],
             ),
           ),

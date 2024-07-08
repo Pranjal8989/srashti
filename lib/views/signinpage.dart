@@ -36,7 +36,7 @@ class _SigninpageState extends State<Signinpage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Dashboardpage(),
+                builder: (context) => Dashboardpage( user_name: response['user_name'], user_pass:response['user_pass'] ,),
               ));
           emailController.text = "";
           passController.text = "";
