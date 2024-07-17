@@ -15,51 +15,59 @@ class Welcomepage extends StatelessWidget {
       child: Column(
         children: [
           Flexible(
-            flex: 8,
-              child: Container(child: Center(child:
-              RichText(
+              flex: 8,
+              child: Container(
+                  child: Center(
+                      child: RichText(
                 textAlign: TextAlign.center,
-                text: const TextSpan(
-                  children: [
-                    TextSpan(
+                text: const TextSpan(children: [
+                  TextSpan(
                       text: 'Welcome to App!\n',
                       style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 45.0
-                      )
-                    )
-                  ]
-                ),
-              )))
-          ),
+                          fontWeight: FontWeight.w600, fontSize: 45.0))
+                ]),
+              )))),
           Flexible(
-              flex:1,
-              child:
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Row(
-              children: [
-                Expanded(child: Loginpage(
-btname: 'Signin',bgcolor: Colors.transparent,textStyle:TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
-                  color: Colors.white,
-                ),callback: (){
-  // Navigator.push(context, MaterialPageRoute(builder: (context) => Signinpage(),));//old_method
-  Get.to(()=>Signinpage(),transition:Transition.circularReveal,duration: Duration(seconds: 5));
-                },
-                )),
-                Expanded(child: Loginpage(btname: 'Signup',bgcolor: Colors.white,textStyle:TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
-                  color: Colors.blue,
-                ),callback: (){
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => Signuppage(),));//old_method
-                  Get.to(()=>Signuppage(),transition: Transition.circularReveal,duration: Duration(seconds: 5));
-                },)),
-              ],
-            ),
-          ))
+              flex: 1,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: Loginpage(
+                      btname: 'Signin',
+                      bgcolor: Colors.transparent,
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                        color: Colors.white,
+                      ),
+                      callback: () {
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => Signinpage(),));//old_method
+                        Get.to(() => Signinpage(),
+                            transition: Transition.circularReveal,
+                            duration: Duration(seconds: 5));
+                      },
+                    )),
+                    Expanded(
+                        child: Loginpage(
+                      btname: 'Signup',
+                      bgcolor: Colors.white,
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                        color: Colors.blue,
+                      ),
+                      callback: () {
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => Signuppage(),));//old_method
+                        Get.to(() => Signuppage(),
+                            transition: Transition.circularReveal,
+                            duration: Duration(seconds: 5));
+                      },
+                    )),
+                  ],
+                ),
+              ))
         ],
       ),
     );

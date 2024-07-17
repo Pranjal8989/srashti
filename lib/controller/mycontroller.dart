@@ -1,26 +1,34 @@
 import 'dart:convert';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:srashti/repository/myrepository.dart';
 import 'package:srashti/views/dashboard/dashboardpage.dart';
 import 'package:http/http.dart' as http;
 import '../component/api.dart';
 import '../widgets/customsnackbar.dart';
 
 class Mycontroller extends GetxController {
-  var userdata = <Map<String, dynamic>>[].obs;
+  final myrepository = Myrepository();
+  // var userdata = <Map<String, dynamic>>[].obs;
+  var recordData = [].obs;
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
 
+  @override
+  void onInit() {
+    super.onInit();
+    getrecords();
+  }
   Future<void> deleteRecord(int index) async {
     try {
       final url = Uri.parse('${Apiurl}delete_record');
       var res = await http.post(url, body: {
-        'id': userdata[index]['id'],
+        'id': recordData[index]['id'],
       });
       var response = jsonDecode(res.body);
       if (response['status'] == '200') {
-        var removedItem = userdata.removeAt(index);
+        var removedItem = recordData.removeAt(index);
         listKey.currentState?.removeItem(
           index,
           (context, animation) => SizeTransition(
@@ -41,8 +49,8 @@ class Mycontroller extends GetxController {
           ),
           duration: Duration(milliseconds: 800),
         );
-            CustomSnackbar.snackbar(
-                'Error', 'Data Deleted Successfully', Icons.check_circle);
+        CustomSnackbar.snackbar(
+            'Error', 'Data Deleted Successfully', Icons.check_circle);
       } else {
         CustomSnackbar.snackbar('Error', 'Something went wrong', Icons.error);
       }
@@ -51,14 +59,32 @@ class Mycontroller extends GetxController {
     }
   }
 
+
   Future<void> getrecords() async {
-    try {
-      final url = Uri.parse('${Apiurl}get_record');
-      var res = await http.get(url);
-      var jsonData = jsonDecode(res.body);
-      this.userdata.assignAll(List<Map<String, dynamic>>.from(jsonData));
-    } catch (e) {
-      CustomSnackbar.snackbar('Error', e.toString(), Icons.error);
+    var data = await myrepository.getrecords();
+    recordData.assignAll(data['data']!);
+  }
+  Future<void> signin(String email, String pass) async {
+    var loginresponse = await myrepository.signin(email, pass);
+    print(loginresponse);
+    if (loginresponse['status'] == '200') {
+      await saveUserData(loginresponse['name'], loginresponse['pass'], email);
+      Get.offAll(Dashboardpage());
     }
+  }
+
+  Future<void> saveUserData(String name, String pass, String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('name', name);
+    await prefs.setString('pass', pass);
+    await prefs.setString('email', email);
+  }
+
+  Future<Map<String, dynamic>> getUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? name = prefs.getString('name');
+    String? pass = prefs.getString('pass');
+    String? email = prefs.getString('email');
+    return {'name': name ?? '', 'pass': pass ?? '', 'email': email ?? ''};
   }
 }

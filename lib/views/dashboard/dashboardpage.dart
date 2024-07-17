@@ -4,36 +4,47 @@ import 'package:get/get.dart';
 import 'package:srashti/controller/mycontroller.dart';
 import 'package:srashti/views/addpage/create_table_page.dart';
 import 'package:srashti/views/dashboard/custombottomsheet.dart';
+import 'package:srashti/views/welcomepage.dart';
 
 import '../../widgets/custom_bottom_navigation.dart';
 
 class Dashboardpage extends StatefulWidget {
-  final String? user_name;
-  final String? user_pass;
-
-  Dashboardpage({required this.user_name, required this.user_pass});// to get the data from login button
   @override
   State<Dashboardpage> createState() => _DashboardpageState();
 }
 
 class _DashboardpageState extends State<Dashboardpage> {
   final mycontroller = Get.put(Mycontroller());
+  String userName ='';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadUserData();
+  }
+Future<void> loadUserData () async{
+    var userData = await mycontroller.getUserData();
+    userName = userData['name'];
+}
+
   void _onNavItemTapped(int index) {
     switch (index) {
       case 0:
-        // Get.to(() => CreateTablePage());
+      // Handle navigation for each tab index
         break;
       case 1:
-        Get.to(() => CreateTablePage());
+        Get.to(() => CreateTablePage(),transition: Transition.rightToLeftWithFade,duration: Duration(seconds:2))?.then((_) {
+          loadUserData(); // Update state when returning from CreateTablePage
+        });
         break;
       case 2:
-        Get.to(() => CreateTablePage());
+        // Get.to(() => );
         break;
       case 3:
-        Get.to(() => CreateTablePage());
+        Get.offAll(() => Welcomepage());
         break;
     }
-    // Add navigation logic here based on the index if needed
   }
   @override
   Widget build(BuildContext context) {
@@ -57,7 +68,7 @@ class _DashboardpageState extends State<Dashboardpage> {
                     // margin: EdgeInsets.only(top: 60, left: 100),
                     // color: Colors.red,
                     child: Text(
-                      'Welcome!,${widget.user_name}',//we use widget beacuse we use statefull widget
+                      'Welcome!,$userName',//we use widget beacuse we use statefull widget
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 32,

@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:srashti/component/api.dart';
+import 'package:srashti/views/welcomepage.dart';
 import 'package:srashti/widgets/coustom_scaffold.dart';
 import 'package:http/http.dart' as http;
 import 'package:srashti/widgets/customsnackbar.dart';
@@ -42,6 +44,7 @@ try{
       passController.text ="";
       emailController.text ="";
       CustomSnackbar.snackbar('Success', 'Details added Successfully',Icons.check_circle);
+      Get.offAll(Welcomepage());
     }else{
       // ScaffoldMessenger.of(context)
       //     .showSnackBar(SnackBar(content: Text('error')));

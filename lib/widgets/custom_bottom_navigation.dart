@@ -9,7 +9,7 @@ class CustomBottomNavigation extends StatelessWidget{
   Widget build(BuildContext context) {
 return CurvedNavigationBar(
   animationDuration: Duration(milliseconds: 300),
-  backgroundColor: Colors.red,
+  backgroundColor: Colors.blue,
   items: const [
     Icon(
       Icons.home,

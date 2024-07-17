@@ -1,9 +1,12 @@
 // import 'dart:js_interop';
 import 'dart:convert';
 
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:srashti/component/api.dart';
+import 'package:srashti/controller/mycontroller.dart';
 import 'package:srashti/views/dashboard/dashboardpage.dart';
 import 'package:srashti/views/signuppage.dart';
 import 'package:srashti/widgets/coustom_scaffold.dart';
@@ -17,36 +20,15 @@ class Signinpage extends StatefulWidget {
 }
 
 class _SigninpageState extends State<Signinpage> {
+  final mycontroller = Get.put(Mycontroller());
   final signinkey = GlobalKey<FormState>();
-
   var remember = true;
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
 
-  Future<void> signin() async {
-    try {
-      if (signinkey.currentState!.validate()) {
-        final url = Uri.parse('${Apiurl}sigin');
-        var res = await http.post(url, body: {
-          'email': emailController.text,
-          'pass': passController.text,
-        });
-        var response = jsonDecode(res.body);
-        if (response['status'] == '200') {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Dashboardpage( user_name: response['user_name'], user_pass:response['user_pass'] ,),
-              ));
-          emailController.text = "";
-          passController.text = "";
-          // CustomSnackbar.snackbar('Success', 'Details added Successfully',Icons.check_circle);
-        } else {
-          CustomSnackbar.snackbar('Error', 'Something went wrong',Icons.error);
-        }
-      }
-    } catch (e) {
-          CustomSnackbar.snackbar('Error', e.toString(),Icons.error);
+  void submit() {
+    if (signinkey.currentState!.validate()) {
+      mycontroller.signin(emailController.text, passController.text);
     }
   }
 
@@ -202,7 +184,7 @@ class _SigninpageState extends State<Signinpage> {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () {
-                                signin();
+                                submit();
                               },
                               child: Text(
                                 'Sigin',

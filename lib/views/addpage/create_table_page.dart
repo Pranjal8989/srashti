@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:srashti/views/dashboard/dashboardpage.dart';
 import '../../component/api.dart';
 import '../../controller/mycontroller.dart';
 import '../../widgets/customsnackbar.dart';
@@ -14,16 +15,14 @@ class CreateTablePage extends StatefulWidget {
 class _CreateTablePageState extends State<CreateTablePage> {
   final mycontroller = Get.put(Mycontroller());
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   mycontroller.getrecords();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    mycontroller.getrecords();
+  }
 
   Future<void> _refreshData() async {
-    // Fetch updated data here
     await mycontroller.getrecords();
-    setState(() {});
   }
 
   @override
@@ -32,28 +31,45 @@ class _CreateTablePageState extends State<CreateTablePage> {
       appBar: AppBar(
         title: Text(
           'View Maintenance',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600 ,color: Colors.white),
+        ),
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(color:Colors.white,shape: BoxShape.circle),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+          ),
         ),
         backgroundColor: Colors.blue,
       ),
-      body:
-      RefreshIndicator(
+      body: RefreshIndicator(
         onRefresh: _refreshData,
-
-        child: Obx(() => mycontroller.userdata.isEmpty
+        child: Obx(() => mycontroller.recordData.isEmpty
             ? Center(child: CircularProgressIndicator())
-            : AnimatedList(
-          key: mycontroller.listKey,
-          initialItemCount: mycontroller.userdata.length,
-          itemBuilder: (context, index, animation) {
-            return _buildItem(
-                mycontroller.userdata[index], animation, index);
-          },
-        )),
+            : Padding(
+              padding: const EdgeInsets.only(bottom: 50.0),
+              child: AnimatedList(
+                        key: mycontroller.listKey,
+                        initialItemCount: mycontroller.recordData.length,
+                        itemBuilder: (context, index, animation) {
+              if (index >= mycontroller.recordData.length) {
+                // If index is out of range, return an empty container
+                return Container();
+              }
+              return _buildItem(
+                  mycontroller.recordData[index], animation, index);
+                        },
+                      ),
+            )),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print('prnjal');
+          // Add your desired functionality here
         },
         elevation: 20,
         backgroundColor: Colors.cyan,
@@ -66,7 +82,7 @@ class _CreateTablePageState extends State<CreateTablePage> {
     return SizeTransition(
       sizeFactor: animation,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(10.0),
         child: Card(
           elevation: 30,
           child: ListTile(
