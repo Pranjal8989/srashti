@@ -56,7 +56,7 @@ class CustomBottomsheet extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 50), //if we donot use any contain in warper
+                SizedBox(height: 100), //if we donot use any contain in warper
               ],
             ),
           ),
